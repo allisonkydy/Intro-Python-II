@@ -1,4 +1,5 @@
 from room import Room
+from player import Player
 
 # Declare all the rooms
 
@@ -49,3 +50,52 @@ room['treasure'].s_to = room['narrow']
 # Print an error message if the movement isn't allowed.
 #
 # If the user enters "q", quit the game.
+
+def main():
+    # make a new player that is currently in the 'outside' room
+    player = Player(input("Enter your name: "), room['outside'])
+
+    while True:
+        # print the current room name
+        print(f"Current location: {player.current_room.name}")
+        # print current room description
+        print(player.current_room.description)
+        # wait for user input
+        user_input = input(">>> ")
+        # if user enters a cardinal direction, attempt to move there
+        if user_input == 'n':
+            # if room exists, update the current room
+            if player.current_room.n_to != None:
+                player.change_room(player.current_room.n_to)
+            else:
+                # print error if movement not allowed
+                print("You cannot move in that direction")
+        elif user_input == 's':
+            # if room exists, update the current room
+            if player.current_room.s_to != None:
+                player.change_room(player.current_room.s_to)
+            else:
+                # print error if movement not allowed
+                print("You cannot move in that direction")
+        elif user_input == 'e':
+            # if room exists, update the current room
+            if player.current_room.e_to != None:
+                player.change_room(player.current_room.e_to)
+            else:
+                # print error if movement not allowed
+                print("You cannot move in that direction")
+        elif user_input == 'w':
+            # if room exists, update the current room
+            if player.current_room.w_to != None:
+                player.change_room(player.current_room.w_to)
+            else:
+                # print error if movement not allowed
+                print("You cannot move in that direction")
+        # else if user enters q, quit the game
+        elif user_input == 'q':
+            break
+        else:
+            print("not valid input, please try again")
+
+if __name__ == '__main__':
+    main()
