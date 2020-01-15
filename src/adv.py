@@ -71,12 +71,13 @@ def main():
     player = Player(input("Enter your name: "), room['outside'])
 
     while True:
+        current_room = player.current_room
         # print the current room name
-        print(f"Current location: {player.current_room.name}")
+        print(f"Current location: {current_room.name}")
         # print current room description
-        print(player.current_room.description)
+        print(current_room.description)
         # print all items in the room
-        player.current_room.print_items()
+        current_room.print_items()
 
         # wait for user input
         user_input = input(">>> ")
@@ -90,7 +91,7 @@ def main():
             # if user enters a cardinal direction, attempt to move there
             if user_input in directions:
                 attempted_room = getattr(
-                    player.current_room, f"{user_input}_to")
+                    current_room, f"{user_input}_to")
                 # if movement is allowed, update the current room
                 if attempted_room != None:
                     player.change_room(attempted_room)
@@ -112,10 +113,10 @@ def main():
             # pick up item: supports 'get' and 'take'
             if verb == 'get' or verb == 'take':
                 # check if item is in the room
-                for item in player.current_room.items:
+                for item in current_room.items:
                     if item.name == object_name:
                         # remove from room and add to player's inventory
-                        player.current_room.remove_item(item)
+                        current_room.remove_item(item)
                         player.add_item(item)
                         item.on_take()
                         break
