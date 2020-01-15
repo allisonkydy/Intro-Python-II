@@ -1,5 +1,6 @@
 from room import Room
 from player import Player
+from item import Item
 
 # Declare all the rooms
 
@@ -34,9 +35,18 @@ room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
-room['outside'].add_item('fork')
-room['outside'].add_item('chicken')
-room['outside'].add_item('log')
+
+# Declare items
+
+item = {
+    'fork': Item('fork', "It's a little rusty"),
+    'chicken': Item('chicken', "It stares at you blankly")
+}
+
+# Add items to rooms
+
+room['outside'].add_item(item['fork'])
+room['outside'].add_item(item['chicken'])
 
 #
 # Main
@@ -98,16 +108,16 @@ def main():
             user_input = user_input.split(' ')
             verb = user_input[0]
             object_name = user_input[1]
-            
+
             # pick up item: supports 'get' and 'take'
             if verb == 'get' or verb == 'take':
                 # check if item is in the room
                 for item in player.current_room.items:
-                    if item == object_name:
+                    if item.name == object_name:
                         # remove from room and add to player's inventory
                         player.current_room.remove_item(item)
                         player.add_item(item)
-                        print(f"You pick up the {item}")
+                        item.on_take()
                         break
                 # print error message
                 else:
