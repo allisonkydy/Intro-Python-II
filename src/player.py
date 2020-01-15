@@ -5,6 +5,13 @@ class Player:
     def __init__(self, name, current_room):
         self.name = name
         self.current_room = current_room
+        self.inventory = []
 
     def change_room(self, new_room):
         self.current_room = new_room
+
+    def add_item(self, item):
+        self.inventory.append(item)
+    
+    def remove_item(self, item):
+        self.inventory.remove(item)
