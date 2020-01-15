@@ -74,6 +74,7 @@ def main():
 
         directions = ('n', 's', 'e', 'w')
 
+        print()
         # if the form of the input is 'verb'
         if input_length == 1:
             # if user enters a cardinal direction, attempt to move there
@@ -86,7 +87,7 @@ def main():
                 # print error message if movement is not allowed
                 else:
                     print("You cannot move in that direction")
-            # else if user enters q, quit the game
+            # if user enters q, quit the game
             elif user_input == 'q':
                 break
             # print error message if user enters invalid input
@@ -95,13 +96,29 @@ def main():
         # if the form of the input is 'verb object'
         elif input_length == 2:
             user_input = user_input.split(' ')
-            # support 'get'
-            # if user_input[0] == 'get':
-            print('wip')
+            verb = user_input[0]
+            object_name = user_input[1]
+            
+            # pick up item: supports 'get' and 'take'
+            if verb == 'get' or verb == 'take':
+                # check if item is in the room
+                for item in player.current_room.items:
+                    if item == object_name:
+                        # remove from room and add to player's inventory
+                        player.current_room.remove_item(item)
+                        player.add_item(item)
+                        print(f"You pick up the {item}")
+                        break
+                # print error message
+                else:
+                    print("There is nothing called that here")
+            else:
+                print("Input not valid, please try again")
         # print error message if user enters invalid input
         else:
             print("Too many words, please try again")
 
+        print()
 
 if __name__ == '__main__':
     main()
