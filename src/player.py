@@ -15,3 +15,9 @@ class Player:
     
     def remove_item(self, item):
         self.inventory.remove(item)
+
+    def print_inventory(self):
+        if len(self.inventory) == 0:
+            print("You're not carrying anything")
+        else:
+            print(f"You're carrying: {', '.join([item.name for item in self.inventory])}")

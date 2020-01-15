@@ -98,9 +98,15 @@ def main():
                 # print error message if movement is not allowed
                 else:
                     print("You cannot move in that direction")
+
+            # show list of items in inventory if player enters 'i' or 'inventory'
+            elif user_input == 'i' or user_input == 'inventory':
+                player.print_inventory()
+
             # if user enters q, quit the game
             elif user_input == 'q':
                 break
+
             # print error message if user enters invalid input
             else:
                 print("Input not valid, please try again")
@@ -114,12 +120,12 @@ def main():
             # pick up item: supports 'get' and 'take'
             if verb == 'get' or verb == 'take':
                 # check if item is in the room
-                for item in current_room.items:
-                    if item.name == object_name:
+                for i in current_room.items:
+                    if i.name == object_name:
                         # remove from room and add to player's inventory
-                        current_room.remove_item(item)
-                        player.add_item(item)
-                        item.on_take()
+                        current_room.remove_item(i)
+                        player.add_item(i)
+                        i.on_take()
                         break
                 # print error message
                 else:
@@ -128,16 +134,25 @@ def main():
             # drop item
             elif verb == 'drop':
                 # check if item is in player's inventory
-                for item in player.inventory:
-                    if item.name == object_name:
+                for i in player.inventory:
+                    if i.name == object_name:
                         # add to room and remove from inventory
-                        current_room.add_item(item)
-                        player.remove_item(item)
-                        item.on_drop()
+                        current_room.add_item(i)
+                        player.remove_item(i)
+                        i.on_drop()
                         break
                 else:
                     print("You don't have that in your inventory")
-                
+
+            # look at item
+            elif verb == 'look':
+                # if the item is in the room or the player's inventory, print the description
+                if object_name in [i.name for i in current_room.items] or object_name in [i.name for i in player.inventory]:
+                    print(item[object_name].description)
+                else:
+                    print("You don't see that")
+
+            # print error message if user enters invalid input
             else:
                 print("Input not valid, please try again")
 
@@ -146,6 +161,7 @@ def main():
             print("Too many words, please try again")
 
         print()
+
 
 if __name__ == '__main__':
     main()
