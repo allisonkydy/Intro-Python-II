@@ -14,5 +14,11 @@ class Room:
     def add_item(self, item):
         self.items.append(item)
     
-    def remove_item(self, item)
+    def remove_item(self, item):
         self.items.remove(item)
+
+    def print_items(self):
+        if len(self.items) == 0:
+            print("Nothing to see here")
+        else:
+            print(f"You see: {', '.join(self.items)}")
