@@ -83,11 +83,11 @@ def main():
         user_input = input(">>> ")
         input_length = len(user_input.split(' '))
 
-        directions = ('n', 's', 'e', 'w')
-
         print()
+
         # if the form of the input is 'verb'
         if input_length == 1:
+            directions = ('n', 's', 'e', 'w')
             # if user enters a cardinal direction, attempt to move there
             if user_input in directions:
                 attempted_room = getattr(
@@ -104,6 +104,7 @@ def main():
             # print error message if user enters invalid input
             else:
                 print("Input not valid, please try again")
+
         # if the form of the input is 'verb object'
         elif input_length == 2:
             user_input = user_input.split(' ')
@@ -123,8 +124,23 @@ def main():
                 # print error message
                 else:
                     print("There is nothing called that here")
+
+            # drop item
+            elif verb == 'drop':
+                # check if item is in player's inventory
+                for item in player.inventory:
+                    if item.name == object_name:
+                        # add to room and remove from inventory
+                        current_room.add_item(item)
+                        player.remove_item(item)
+                        item.on_drop()
+                        break
+                else:
+                    print("You don't have that in your inventory")
+                
             else:
                 print("Input not valid, please try again")
+
         # print error message if user enters invalid input
         else:
             print("Too many words, please try again")

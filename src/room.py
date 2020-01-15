@@ -19,6 +19,6 @@ class Room:
 
     def print_items(self):
         if len(self.items) == 0:
-            print("Nothing to see here")
+            print("Nothing to see here.")
         else:
             print(f"You see: {', '.join([item.name for item in self.items])}")
