@@ -71,16 +71,16 @@ room['ruins'].w_to = room['garden']
 # Declare items
 
 item = {
-    'wood': Item('wood', "A plank of soft wood, perfect for carving", True),
-    'lantern': LightSource('lantern', "It's one of those vintage ones that burn oil", True),
-    'egg': UsableItem('egg', "Brown with some dark speckles", True, ('pedastel')),
-    'knife': UsableItem('knife', "The blade is short, but sharp", True, ('wood')),
-    'oil': UsableItem('oil', "A small canister of oil", True, ('lantern')),
-    'mushroom': Item('mushroom', "A little brown mushroom", True),
-    'beaver': UsableItem('beaver', "It won't stop chattering", False, ('river')),
-    'flute': UsableItem('flute', "A hand-carved wooden flute. It's a little out of tune.", True, ('beaver')),
-    'lily': UsableItem('lily', "A beautiful white water lily", True, ('beaver')),
-    'key': UsableItem('key', "An old iron key. It's a bit rusty.", True, ('gate', 'lock')),
+    'wood': Item('wood', "A plank of soft wood, perfect for carving", True, True),
+    'lantern': LightSource('lantern', "It's one of those vintage ones that burn oil", True, True),
+    'egg': UsableItem('egg', "Brown with some dark speckles", True, True, ('pedastel')),
+    'knife': UsableItem('knife', "The blade is short, but sharp", True, True, ('wood')),
+    'oil': UsableItem('oil', "A small canister of oil", True, False, ('lantern')),
+    'mushroom': Item('mushroom', "A little brown mushroom", True, True),
+    'beaver': UsableItem('beaver', "It won't stop chattering", False, False, ('river')),
+    'flute': UsableItem('flute', "A hand-carved wooden flute. It's a little out of tune.", True, True, ('beaver')),
+    'lily': UsableItem('lily', "A beautiful white water lily", True, True, ('beaver')),
+    'key': UsableItem('key', "An old iron key. It's a bit rusty.", True, True, ('gate', 'lock')),
 }
 
 # Add items to rooms
@@ -94,6 +94,31 @@ room['forest'].add_item(item['knife'])
 room['glen'].add_item(item['beaver'])
 room['river'].add_item(item['lily'])
 room['cave'].add_item(item['key'])
+
+
+# Define actions
+
+class Actions:
+    def oil_lantern(self, player, current_room, oil, lantern):
+        player.remove_item(oil)
+        player.is_lit = True
+        lantern.is_lit = True
+        print("Oil used on lantern")
+        print("Lantern is now lit")
+
+    def knife_wood(self, player, current_room, knife, wood):
+        player.remove_item(knife)
+        player.remove_item(wood)
+        player.add_item(item['flute'])
+        print("Knife used on wood")
+        print("""A mysterious creative energy guides your hand. 
+You are compelled to whittle a flute out of the soft wood. It plays a haunting tune.""")
+        print("Flute added to inventory")
+
+    def flute_beaver(self, player, current_room, flute, beaver):
+        beaver.is_interactable = True
+        print("The beaver is drawn to the sound of the flute. It looks friendly now.")
+
 
 #
 # Main
@@ -205,27 +230,6 @@ def main():
 
         print()
 
-
-class Actions:
-    def oil_lantern(self, player, current_room, oil, lantern):
-        player.remove_item(oil)
-        player.is_lit = True
-        lantern.is_lit = True
-        print("Oil used on lantern")
-        print("Lantern is now lit")
-
-    def knife_wood(self, player, current_room, knife, wood):
-        player.remove_item(knife)
-        player.remove_item(wood)
-        player.add_item(item['flute'])
-        print("Knife used on wood")
-        print("""A mysterious creative energy guides your hand. 
-You are compelled to whittle a flute out of the soft wood. It plays a haunting tune.""")
-        print("Flute added to inventory")
-
-    def flute_beaver(self, player, current_room, flute, beaver):
-        beaver.is_interactable = True
-        print("The beaver is drawn to the sound of the flute. It looks friendly now.")
 
 
 if __name__ == '__main__':
