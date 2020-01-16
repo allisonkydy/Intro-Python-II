@@ -14,7 +14,7 @@ class Room:
 
     def __str__(self):
         display_string = ""
-        display_string += f"\n-------------------------\n"
+        display_string += f"\n-------------------------------------------------------------\n"
         display_string += f"\n{self.name}\n"
         display_string += f"\n{self.description}\n"
         return display_string

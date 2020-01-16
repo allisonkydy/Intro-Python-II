@@ -1,7 +1,6 @@
 from room import Room
 from player import Player
-from item import Item, LightSource, UsableItem
-# from actions import Actions
+from item import Item, LightSource, LockedItem
 
 # Declare all the rooms
 
@@ -71,17 +70,18 @@ room['ruins'].w_to = room['garden']
 # Declare items
 
 item = {
-    'wood': Item('wood', "A plank of soft wood, perfect for carving", True, True),
-    'lantern': LightSource('lantern', "It's one of those vintage ones that burn oil", True, True),
-    'egg': UsableItem('egg', "Brown with some dark speckles", True, True, ('pedastel')),
-    'knife': UsableItem('knife', "The blade is short, but sharp", True, True, ('wood')),
-    'oil': UsableItem('oil', "A small canister of oil", True, False, ('lantern')),
-    'mushroom': UsableItem('mushroom', "A little brown mushroom", True, True, ('chicken')),
-    'beaver': UsableItem('beaver', "It won't stop chattering", False, False, ('river')),
-    'flute': UsableItem('flute', "A hand-carved wooden flute. It's a little out of tune.", True, True, ('beaver')),
-    'lily': UsableItem('lily', "A beautiful white water lily", True, True, ('beaver')),
-    'key': UsableItem('key', "An old iron key. It's a bit rusty.", True, True, ('gate', 'lock')),
-    'chicken': Item('chicken', "It stares at you blankly. It must be hiding something...", True, False),
+    'wood': Item('wood', "A plank of soft wood, perfect for carving", True),
+    'lantern': LightSource('lantern', "It's one of those vintage ones that burn oil", True),
+    'egg': Item('egg', "Brown with some dark speckles", True),
+    'knife': Item('knife', "The blade is short, but sharp", True),
+    'oil': Item('oil', "A small canister of oil", False),
+    'mushroom': Item('mushroom', "A little brown mushroom", True),
+    'beaver': LockedItem('beaver', "It won't stop chattering", False),
+    'flute': Item('flute', "A hand-carved wooden flute. It's a little out of tune.", True),
+    'lily': Item('lily', "A beautiful white water lily", True),
+    'key': Item('key', "An old iron key. It's a bit rusty.", True),
+    'chicken': Item('chicken', "It stares at you blankly. It must be hiding something...", False),
+    'gate': LockedItem('gate', "A large, imposing wrought-iron gate. It's closed and locked.", False),
 }
 
 # Add items to rooms
@@ -95,6 +95,11 @@ room['forest'].add_item(item['knife'])
 room['glen'].add_item(item['beaver'])
 room['river'].add_item(item['lily'])
 room['cave'].add_item(item['key'])
+
+# Add keys to locks
+
+item['beaver'].key = item['flute']
+item['gate'].key = item['key']
 
 
 # Define actions
@@ -121,7 +126,6 @@ You are compelled to whittle a flute out of the soft wood. It plays a haunting t
 
     def mushroom_chicken(self, mushroom, chicken):
         self.player.remove_item(mushroom)
-        chicken.is_interactable = False
         self.player.current_room.remove_item(chicken)
         self.player.current_room.add_item(item['oil'])
         item['oil'].is_gettable = True
@@ -135,10 +139,18 @@ You are compelled to whittle a flute out of the soft wood. It plays a haunting t
         print(display_string)
 
     def flute_beaver(self, flute, beaver):
-        beaver.is_interactable = True
+        beaver.is_locked = False
         print("The beaver is drawn to the sound of the flute. It looks friendly now.")
 
-    # def lily_beaver(self, player, )
+    def lily_beaver(self, lily, beaver):
+        beaver.is_gettable = True
+        self.player.remove_item(lily)
+
+        display_string = ""
+        display_string += "\nYou offer the water lily to the beaver."
+        display_string += "\nThe beaver sniffs at it then eats it right out of your hand."
+        display_string += "\nIts eyes are filled with trust. It will follow you anywhere."
+        print(display_string)
 
 
 #

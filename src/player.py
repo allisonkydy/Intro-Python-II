@@ -1,7 +1,7 @@
 # Write a class to hold player information, e.g. what room they are in
 # currently.
 
-from item import LightSource, UsableItem
+from item import LightSource, LockedItem
 
 
 class Player:
@@ -36,13 +36,17 @@ class Player:
         if self.current_room.is_lit or self.is_lit:
             # check if item is in the room
             if item in self.current_room.items:
-                # remove from room and add to player's inventory
-                self.current_room.remove_item(item)
-                self.inventory.append(item)
-                item.on_take()
-                # light up player if item is a lit light source
-                if isinstance(item, LightSource) and item.is_lit:
-                    self.is_lit = True
+                # check if item is gettable
+                if item.is_gettable:
+                    # remove from room and add to player's inventory
+                    self.current_room.remove_item(item)
+                    self.inventory.append(item)
+                    item.on_take()
+                    # light up player if item is a lit light source
+                    if isinstance(item, LightSource) and item.is_lit:
+                        self.is_lit = True
+                else:
+                    print("You can't get that right now")
 
             else:
                 print("There is no such thing here")
@@ -85,17 +89,17 @@ class Player:
     def use_item_on_item(self, item_used, item_target, actions):
         # check if player has the item used
         if item_used in self.inventory:
-            # check if that item is usable
-            if isinstance(item_used, UsableItem):
+            # check that target item is not locked
+            if not isinstance(item_target, LockedItem) or not item_target.is_locked:
                 # check if the item used can be used on the target item
-                if item_target.name in item_used.used_on and hasattr(actions, f"{item_used.name}_{item_target.name}") and item_target.is_interactable:
+                if hasattr(actions, f"{item_used.name}_{item_target.name}"):
                     getattr(actions, f"{item_used.name}_{item_target.name}")(item_used, item_target)
 
                 else:
                     print("That's not a good idea")
-
+            elif item_target.is_locked and item_target.key is item_used:
+                getattr(actions, f"{item_used.name}_{item_target.name}")(item_used, item_target)
             else:
-                print("You can't use that")
-
+                print("Locked")
         else:
             print("You don't have that")
