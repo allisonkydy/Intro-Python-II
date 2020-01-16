@@ -5,48 +5,84 @@ from item import Item
 # Declare all the rooms
 
 room = {
-    'outside':  Room("Outside Cave Entrance",
-                     "North of you, the cave mount beckons"),
+    'shack':  Room("Shack", """The thin wooden walls are rotting and the floor is nothing but dirt. 
+It smells pretty bad in here. Light filters in from the door to the south."""),
 
-    'foyer':    Room("Foyer", """Dim light filters in from the south. Dusty
-passages run north and east."""),
+    'garden':    Room("Overgrown Garden", """It used to be a garden, but weeds have sprung up between the neatly planted rows. 
+The air carries a light floral fragrance. You hear the rustling of chickens to the west. 
+To the south is a large forest. A wrought-iron gate lies east. The small shack is just north."""),
 
-    'overlook': Room("Grand Overlook", """A steep cliff appears before you, falling
-into the darkness. Ahead to the north, a light flickers in
-the distance, but there is no way across the chasm."""),
+    'coop': Room("Chicken Coop", """Cozy stalls hold about twenty dozing chickens. They look well-fed and content. 
+East is the door to the garden."""),
 
-    'narrow':   Room("Narrow Passage", """The narrow passage bends here from west
-to north. The smell of gold permeates the air."""),
+    'ruins':   Room("Ancient Ruins", """Smooth, mossy rocks are scattered about. Some are still loosely connected, 
+forming the remains of a circular tower. An engraved pedastel lies in the center of the tower. 
+On its surface is an oblong indentation."""),
 
-    'treasure': Room("Treasure Chamber", """You've found the long-lost treasure
-chamber! Sadly, it has already been completely emptied by
-earlier adventurers. The only exit is to the south."""),
+    'forest': Room("Forest", """Trees tower over your head and the floor is thick with underbrush. 
+The canopy blocks out all light from above. You try not to look directly at the shadows. 
+A faint bubbling sound comes from the south. A small dirt path leads west."""),
+
+    'glen':   Room("Secluded Glen", """Mossy rocks slope gently down to a narrow stream. 
+The air is cool and damp. The path bends from east to south."""),
+
+    'river':   Room("Bubbling River", """The river bubbles excitedly, flowing from east to west. 
+A small cluster of lily pads clings to rocks in the shallows."""),
+
+    'waterfall':   Room("Waterfall", """Water cascades down from the cliff with a dull roar. 
+You squint your eyes against the spray. The path stretches to the north."""),
+
+    'cave':   Room("Secret Cave", """Aha, a hidden cave! The walls seem to glow with a faint light. 
+Water drops gently from cracks in the ceiling. The entrance is the to the north."""),
 }
 
 
 # Link rooms together
 
-room['outside'].n_to = room['foyer']
-room['foyer'].s_to = room['outside']
-room['foyer'].n_to = room['overlook']
-room['foyer'].e_to = room['narrow']
-room['overlook'].s_to = room['foyer']
-room['narrow'].w_to = room['foyer']
-room['narrow'].n_to = room['treasure']
-room['treasure'].s_to = room['narrow']
+room['shack'].s_to = room['garden']
+room['garden'].n_to = room['shack']
+room['garden'].w_to = room['coop']
+room['garden'].e_to = room['ruins']
+room['garden'].s_to = room['forest']
+room['coop'].e_to = room['garden']
+room['forest'].n_to = room['garden']
+room['forest'].w_to = room['glen']
+room['forest'].s_to = room['river']
+room['river'].n_to = room['forest']
+room['glen'].e_to = room['forest']
+room['glen'].s_to = room['waterfall']
+room['waterfall'].s_to = room['cave']
+room['waterfall'].n_to = room['glen']
+room['cave'].n_to = room['waterfall']
+room['ruins'].w_to = room['garden']
 
 
 # Declare items
 
 item = {
-    'fork': Item('fork', "It's a little rusty"),
-    'chicken': Item('chicken', "It stares at you blankly")
+    'wood': Item('wood', "A plank of soft wood, perfect for carving"),
+    'lantern': Item('lantern', "It's one of those vintage ones that burn oil"),
+    'egg': Item('egg', "Brown with some dark speckles"),
+    'knife': Item('knife', "The blade is short, but sharp"),
+    'oil': Item('oil', "A small canister of oil"),
+    'mushroom': Item('mushroom', "A little brown mushroom"),
+    'beaver': Item('beaver', "It won't stop chattering"),
+    'flute': Item('flute', "A hand-carved wooden flute. It's a little out of tune."),
+    'lily': Item('lily', "A beautiful white water lily"),
+    'key': Item('key', "An old iron key. It's a bit rusty."),
 }
 
 # Add items to rooms
 
-room['outside'].add_item(item['fork'])
-room['outside'].add_item(item['chicken'])
+room['shack'].add_item(item['wood'])
+room['shack'].add_item(item['lantern'])
+room['garden'].add_item(item['knife'])
+room['coop'].add_item(item['egg'])
+room['coop'].add_item(item['oil'])
+room['forest'].add_item(item['mushroom'])
+room['glen'].add_item(item['beaver'])
+room['river'].add_item(item['lily'])
+room['cave'].add_item(item['key'])
 
 #
 # Main
@@ -67,8 +103,8 @@ room['outside'].add_item(item['chicken'])
 
 
 def main():
-    # make a new player that is currently in the 'outside' room
-    player = Player(input("Enter your name: "), room['outside'])
+    # make a new player that is currently in the shack
+    player = Player(input("Enter your name: "), room['shack'])
 
     while True:
         current_room = player.current_room
