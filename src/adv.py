@@ -71,16 +71,16 @@ room['ruins'].w_to = room['garden']
 # Declare items
 
 item = {
-    'wood': Item('wood', "A plank of soft wood, perfect for carving"),
-    'lantern': LightSource('lantern', "It's one of those vintage ones that burn oil"),
-    'egg': UsableItem('egg', "Brown with some dark speckles", ('pedastel')),
-    'knife': UsableItem('knife', "The blade is short, but sharp", ('wood')),
-    'oil': UsableItem('oil', "A small canister of oil", ('lantern')),
-    'mushroom': Item('mushroom', "A little brown mushroom"),
-    'beaver': UsableItem('beaver', "It won't stop chattering", ('river')),
-    'flute': UsableItem('flute', "A hand-carved wooden flute. It's a little out of tune.", ('beaver')),
-    'lily': UsableItem('lily', "A beautiful white water lily", ('beaver')),
-    'key': UsableItem('key', "An old iron key. It's a bit rusty.", ('gate', 'lock')),
+    'wood': Item('wood', "A plank of soft wood, perfect for carving", True),
+    'lantern': LightSource('lantern', "It's one of those vintage ones that burn oil", True),
+    'egg': UsableItem('egg', "Brown with some dark speckles", True, ('pedastel')),
+    'knife': UsableItem('knife', "The blade is short, but sharp", True, ('wood')),
+    'oil': UsableItem('oil', "A small canister of oil", True, ('lantern')),
+    'mushroom': Item('mushroom', "A little brown mushroom", True),
+    'beaver': UsableItem('beaver', "It won't stop chattering", False, ('river')),
+    'flute': UsableItem('flute', "A hand-carved wooden flute. It's a little out of tune.", True, ('beaver')),
+    'lily': UsableItem('lily', "A beautiful white water lily", True, ('beaver')),
+    'key': UsableItem('key', "An old iron key. It's a bit rusty.", True, ('gate', 'lock')),
 }
 
 # Add items to rooms
@@ -241,7 +241,7 @@ def main():
                 # check if that item is usable
                 if isinstance(item[item_used], UsableItem):
                     # check if the item used can be used on the target item
-                    if hasattr(actions, f"{item_used}_{item_target}"):
+                    if hasattr(actions, f"{item_used}_{item_target}") and item[item_target].is_interactable:
                         getattr(actions, f"{item_used}_{item_target}")(player, current_room, item[item_used], item[item_target])
 
                     else:
@@ -276,6 +276,10 @@ class Actions:
         print("""A mysterious creative energy guides your hand. 
 You are compelled to whittle a flute out of the soft wood. It plays a haunting tune.""")
         print("Flute added to inventory")
+
+    def flute_beaver(self, player, current_room, flute, beaver):
+        beaver.is_interactable = True
+        print("The beaver is drawn to the sound of the flute. It looks friendly now.")
 
 
 if __name__ == '__main__':
