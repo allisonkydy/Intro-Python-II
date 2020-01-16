@@ -88,12 +88,12 @@ class Player:
             # check if that item is usable
             if isinstance(item_used, UsableItem):
                 # check if the item used can be used on the target item
-                if hasattr(actions, f"{item_used.name}_{item_target.name}") and item_target.is_interactable:
+                if item_target.name in item_used.used_on and hasattr(actions, f"{item_used.name}_{item_target.name}") and item_target.is_interactable:
                     getattr(actions, f"{item_used.name}_{item_target.name}")(
                         self, self.current_room, item_used, item_target)
 
                 else:
-                    ("That's not a good idea")
+                    print("That's not a good idea")
 
             else:
                 print("You can't use that")

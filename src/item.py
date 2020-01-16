@@ -25,4 +25,3 @@ class UsableItem(Item):
     def __init__(self, name, description, is_interactable, used_on):
         super().__init__(name, description, is_interactable)
         self.used_on = used_on
-        self.is_used = False
