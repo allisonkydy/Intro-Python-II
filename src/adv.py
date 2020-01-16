@@ -86,10 +86,10 @@ item = {
 
 room['shack'].add_item(item['wood'])
 room['shack'].add_item(item['lantern'])
-room['garden'].add_item(item['knife'])
+room['garden'].add_item(item['mushroom'])
 room['coop'].add_item(item['egg'])
 room['coop'].add_item(item['oil'])
-room['forest'].add_item(item['mushroom'])
+room['forest'].add_item(item['knife'])
 room['glen'].add_item(item['beaver'])
 room['river'].add_item(item['lily'])
 room['cave'].add_item(item['key'])
@@ -127,14 +127,16 @@ def main():
             print(f"Current location: {current_room.name}")
             # print current room description
             print(current_room.description)
-            # print all items in the room
-            current_room.print_items()
+            
         else:
             print("It's pitch black. You hear strange whispers coming from the darkness...")
 
         # wait for user input
         user_input = input(">>> ")
         input_length = len(user_input.split(' '))
+
+        if input_length > 1:
+            user_input = user_input.split(' ')
 
         print()
 
@@ -156,6 +158,10 @@ def main():
                 else:
                     print("You cannot move in that direction")
 
+            # print list of items in room if player looks around ('l' or 'look')
+            elif user_input == 'l' or user_input == 'look':
+                current_room.print_items()
+
             # show list of items in inventory if player enters 'i' or 'inventory'
             elif user_input == 'i' or user_input == 'inventory':
                 player.print_inventory()
@@ -170,7 +176,6 @@ def main():
 
         # if the form of the input is 'verb object'
         elif input_length == 2:
-            user_input = user_input.split(' ')
             verb = user_input[0]
             object_name = user_input[1]
 
@@ -220,6 +225,15 @@ def main():
             # print error message if user enters invalid input
             else:
                 print("Input not valid, please try again")
+
+        # if the form of the input is 'use [item] on [item]'
+        # elif input_length == 4 and user_input[0] == "use" and user_input[2] == "on":
+        #     item_used = user_input[1]
+        #     item_acted_upon = user_input[3]
+
+            # check if player has the item used
+            # check if that item is usable
+            # check
 
         # print error message if user enters invalid input
         else:
