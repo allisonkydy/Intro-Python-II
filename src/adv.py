@@ -171,18 +171,22 @@ def main():
             # pick up item: supports 'get' and 'take'
             if verb == 'get' or verb == 'take':
                 # check if item is in the room
-                for i in current_room.items:
-                    if i.name == object_name:
-                        # remove from room and add to player's inventory
-                        current_room.remove_item(i)
-                        player.add_item(i)
-                        i.on_take()
-                        if i.is_lit:
-                            player.is_lit = True
-                        break
-                # print error message
+                if current_room.is_lit or player.is_lit:
+                    for i in current_room.items:
+                        if i.name == object_name:
+                                # remove from room and add to player's inventory
+                                current_room.remove_item(i)
+                                player.add_item(i)
+                                i.on_take()
+                                if i.is_lit:
+                                    player.is_lit = True
+                                break
+
+                    # print error message
+                    else:
+                        print("There is nothing called that here")
                 else:
-                    print("There is nothing called that here")
+                    print("Good luck finding that in the dark")
 
             # drop item
             elif verb == 'drop':
@@ -193,6 +197,8 @@ def main():
                         current_room.add_item(i)
                         player.remove_item(i)
                         i.on_drop()
+                        if i.is_lit:
+                            player.is_lit = False
                         break
                 else:
                     print("You don't have that in your inventory")
