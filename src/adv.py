@@ -1,7 +1,7 @@
 from room import Room
 from player import Player
 from item import Item, LightSource, UsableItem
-from actions import Actions
+# from actions import Actions
 
 # Declare all the rooms
 
@@ -242,7 +242,7 @@ def main():
                 if isinstance(item[item_used], UsableItem):
                     # check if the item used can be used on the target item
                     if hasattr(actions, f"{item_used}_{item_target}"):
-                        getattr(actions, f"{item_used}_{item_target}")(player, item[item_used], item[item_target])
+                        getattr(actions, f"{item_used}_{item_target}")(player, current_room, item[item_used], item[item_target])
 
                     else:
                         ("That's not a good idea")
@@ -258,6 +258,24 @@ def main():
             print("Too many words, please try again")
 
         print()
+
+
+class Actions:
+    def oil_lantern(self, player, current_room, oil, lantern):
+        player.remove_item(oil)
+        player.is_lit = True
+        lantern.is_lit = True
+        print("Oil used on lantern")
+        print("Lantern is now lit")
+
+    def knife_wood(self, player, current_room, knife, wood):
+        player.remove_item(knife)
+        player.remove_item(wood)
+        player.add_item(item['flute'])
+        print("Knife used on wood")
+        print("""A mysterious creative energy guides your hand. 
+You are compelled to whittle a flute out of the soft wood. It plays a haunting tune.""")
+        print("Flute added to inventory")
 
 
 if __name__ == '__main__':
