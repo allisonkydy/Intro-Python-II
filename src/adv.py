@@ -1,6 +1,7 @@
 from room import Room
 from player import Player
 from item import Item, LightSource, UsableItem
+from actions import Actions
 
 # Declare all the rooms
 
@@ -71,7 +72,7 @@ room['ruins'].w_to = room['garden']
 
 item = {
     'wood': Item('wood', "A plank of soft wood, perfect for carving"),
-    'lantern': LightSource('lantern', "It's one of those vintage ones that burn oil", True),
+    'lantern': LightSource('lantern', "It's one of those vintage ones that burn oil"),
     'egg': UsableItem('egg', "Brown with some dark speckles", ('pedastel')),
     'knife': UsableItem('knife', "The blade is short, but sharp", ('wood')),
     'oil': UsableItem('oil', "A small canister of oil", ('lantern')),
@@ -117,6 +118,8 @@ def main():
     player = Player(input("Enter your name: "), room['shack'])
 
     prev_room = None
+
+    # actions = Actions()
 
     while True:
         current_room = player.current_room
@@ -183,15 +186,15 @@ def main():
             if verb == 'get' or verb == 'take':
                 # check if item is in the room
                 if current_room.is_lit or player.is_lit:
-                    for i in current_room.items:
-                        if i.name == object_name:
-                                # remove from room and add to player's inventory
-                                current_room.remove_item(i)
-                                player.add_item(i)
-                                i.on_take()
-                                if i.is_lit:
-                                    player.is_lit = True
-                                break
+                    if object_name in item and not item[object_name] in player.inventory:
+                        i = item[object_name]
+                        # remove from room and add to player's inventory
+                        current_room.remove_item(i)
+                        player.add_item(i)
+                        i.on_take()
+                        # light up player if item is a lit light source
+                        if isinstance(i, LightSource) and i.is_lit:
+                            player.is_lit = True
 
                     # print error message
                     else:
@@ -202,15 +205,15 @@ def main():
             # drop item
             elif verb == 'drop':
                 # check if item is in player's inventory
-                for i in player.inventory:
-                    if i.name == object_name:
-                        # add to room and remove from inventory
-                        current_room.add_item(i)
-                        player.remove_item(i)
-                        i.on_drop()
-                        if i.is_lit:
-                            player.is_lit = False
-                        break
+                if object_name in item and item[object_name] in player.inventory:
+                    i = item[object_name]
+                    # add to room and remove from inventory
+                    current_room.add_item(i)
+                    player.remove_item(i)
+                    i.on_drop()
+                    # darken player if item is a lit light source
+                    if isinstance(i, LightSource) and i.is_lit:
+                        player.is_lit = False
                 else:
                     print("You don't have that in your inventory")
 
@@ -229,11 +232,13 @@ def main():
         # if the form of the input is 'use [item] on [item]'
         # elif input_length == 4 and user_input[0] == "use" and user_input[2] == "on":
         #     item_used = user_input[1]
-        #     item_acted_upon = user_input[3]
+        #     item_target = user_input[3]
 
-            # check if player has the item used
-            # check if that item is usable
-            # check
+        #     # check if player has the item used
+        #     # check if that item is usable
+        #     # check if the item used can be used on the target item
+
+        #     if 
 
         # print error message if user enters invalid input
         else:
