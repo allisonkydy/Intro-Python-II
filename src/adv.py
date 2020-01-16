@@ -1,6 +1,6 @@
 from room import Room
 from player import Player
-from item import Item
+from item import Item, LightSource
 
 # Declare all the rooms
 
@@ -61,7 +61,7 @@ room['ruins'].w_to = room['garden']
 
 item = {
     'wood': Item('wood', "A plank of soft wood, perfect for carving"),
-    'lantern': Item('lantern', "It's one of those vintage ones that burn oil"),
+    'lantern': LightSource('lantern', "It's one of those vintage ones that burn oil"),
     'egg': Item('egg', "Brown with some dark speckles"),
     'knife': Item('knife', "The blade is short, but sharp"),
     'oil': Item('oil', "A small canister of oil"),
