@@ -117,19 +117,16 @@ def main():
     # make a new player that is currently in the shack
     player = Player(input("Enter your name: "), room['shack'])
 
-    prev_room = None
-
     actions = Actions()
+
+    directions = ('n', 's', 'e', 'w')
 
     while True:
         current_room = player.current_room
 
         # if the current room is lit or the player has a light source that is lit
-        if current_room.is_lit or player.is_lit:
-            # print the current room name
-            print(f"Current location: {current_room.name}")
-            # print current room description
-            print(current_room.description)
+        if player.is_player_or_room_lit():
+            print(player.current_room)
 
         else:
             print(
@@ -146,21 +143,9 @@ def main():
 
         # if the form of the input is 'verb'
         if input_length == 1:
-            directions = ('n', 's', 'e', 'w')
             # if user enters a cardinal direction, attempt to move there
             if user_input in directions:
-                attempted_room = getattr(
-                    current_room, f"{user_input}_to")
-                # if movement is allowed, update the current room
-                if attempted_room != None:
-                    if (current_room.is_lit or player.is_lit) or attempted_room == prev_room:
-                        player.change_room(attempted_room)
-                        prev_room = current_room
-                    else:
-                        print("It's too dark to see that way")
-                # print error message if movement is not allowed
-                else:
-                    print("You cannot move in that direction")
+                player.change_room(user_input)
 
             # print list of items in room if player looks around ('l' or 'look')
             elif user_input == 'l' or user_input == 'look':
@@ -183,48 +168,20 @@ def main():
             verb = user_input[0]
             object_name = user_input[1]
 
-            # pick up item: supports 'get' and 'take'
-            if verb == 'get' or verb == 'take':
-                # check if item is in the room
-                if current_room.is_lit or player.is_lit:
-                    if object_name in item and item[object_name] in current_room.items:
-                        i = item[object_name]
-                        # remove from room and add to player's inventory
-                        current_room.remove_item(i)
-                        player.add_item(i)
-                        i.on_take()
-                        # light up player if item is a lit light source
-                        if isinstance(i, LightSource) and i.is_lit:
-                            player.is_lit = True
+            if not object_name in item:
+                print("That item does not exist")
 
-                    # print error message
-                    else:
-                        print("There is nothing called that here")
-                else:
-                    print("Good luck finding that in the dark")
+            # pick up item: supports 'get' and 'take'
+            elif verb == 'get' or verb == 'take':
+                player.take_item(item[object_name])
 
             # drop item
             elif verb == 'drop':
-                # check if item is in player's inventory
-                if object_name in item and item[object_name] in player.inventory:
-                    i = item[object_name]
-                    # add to room and remove from inventory
-                    current_room.add_item(i)
-                    player.remove_item(i)
-                    i.on_drop()
-                    # darken player if item is a lit light source
-                    if isinstance(i, LightSource) and i.is_lit:
-                        player.is_lit = False
-                else:
-                    print("You don't have that in your inventory")
+                player.drop_item(item[object_name])
 
             # look at item
             elif verb == 'look':
-                # if the item is in the room or the player's inventory, print the description
-                if object_name in [i.name for i in current_room.items] or object_name in [i.name for i in player.inventory]:
-                    print(item[object_name].description)
-                else:
-                    print("You don't see that")
+                player.look_item(item[object_name])
 
             # print error message if user enters invalid input
             else:
@@ -236,22 +193,11 @@ def main():
             item_target = user_input[3]
 
             # check if items exist
-            # check if player has the item used
-            if item_used in item and item_target in item and item[item_used] in player.inventory:
-                # check if that item is usable
-                if isinstance(item[item_used], UsableItem):
-                    # check if the item used can be used on the target item
-                    if hasattr(actions, f"{item_used}_{item_target}") and item[item_target].is_interactable:
-                        getattr(actions, f"{item_used}_{item_target}")(player, current_room, item[item_used], item[item_target])
-
-                    else:
-                        ("That's not a good idea")
-
-                else:
-                    print("You can't use that")
+            if item_used in item and item_target in item:
+                player.use_item_on_item(item[item_used], item[item_target], actions)
 
             else:
-                print("You don't have that in your inventory")
+                print("At least one of those does not exist")
 
         # print error message if user enters invalid input
         else:

@@ -12,6 +12,18 @@ class Room:
         self.items = []
         self.is_lit = is_lit
 
+    def __str__(self):
+        display_string = ""
+        display_string += f"\n-------------------------\n"
+        display_string += f"\n{self.name}\n"
+        display_string += f"\n{self.description}\n"
+        return display_string
+
+    def get_room_in_direction(self, direction):
+        if hasattr(self, f"{direction}_to"):
+            return getattr(self, f"{direction}_to")
+        return None
+
     def add_item(self, item):
         self.items.append(item)
     
