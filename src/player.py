@@ -16,12 +16,15 @@ class Player:
     def change_room(self, direction):
         next_room = self.current_room.get_room_in_direction(direction)
 
-        if next_room is not None:
-            if (self.current_room.is_lit or self.is_lit) or next_room == self.prev_room:
-                self.prev_room = self.current_room
-                self.current_room = next_room
+        if next_room is not None :
+            if next_room != 'locked':
+                if (self.current_room.is_lit or self.is_lit) or next_room == self.prev_room:
+                    self.prev_room = self.current_room
+                    self.current_room = next_room
+                else:
+                    print("It's too dark to see that way")
             else:
-                print("It's too dark to see that way")
+                print("Your path is blocked")
         else:
             print("You cannot move in that direction")
 
@@ -33,7 +36,7 @@ class Player:
 
     def take_item(self, item):
         # check if room or player is lit
-        if self.current_room.is_lit or self.is_lit:
+        if self.is_player_or_room_lit():
             # check if item is in the room
             if item in self.current_room.items:
                 # check if item is gettable

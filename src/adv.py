@@ -37,8 +37,9 @@ The air is cool and damp. The path bends from east to south.""",
 A small cluster of lily pads clings to rocks in the shallows.""",
                     True),
 
-    'waterfall':   Room("Waterfall", """Water cascades down from the cliff with a dull roar. 
-You squint your eyes against the spray. The path stretches to the north.""",
+    'cliff':   Room("Tall Cliff", """Water cascades down from the cliff with a dull roar. 
+You squint your eyes against the spray. The path stretches to the north and south.
+The large waterfall blocks your path in the southern direction.""",
                         True),
 
     'cave':   Room("Secret Cave", """Aha, a hidden cave! The walls seem to glow with a faint light. 
@@ -52,7 +53,7 @@ Water drops gently from cracks in the ceiling. The entrance is the to the north.
 room['shack'].s_to = room['garden']
 room['garden'].n_to = room['shack']
 room['garden'].w_to = room['coop']
-room['garden'].e_to = room['ruins']
+room['garden'].e_to = 'locked'
 room['garden'].s_to = room['forest']
 room['coop'].e_to = room['garden']
 room['forest'].n_to = room['garden']
@@ -60,10 +61,10 @@ room['forest'].w_to = room['glen']
 room['forest'].s_to = room['river']
 room['river'].n_to = room['forest']
 room['glen'].e_to = room['forest']
-room['glen'].s_to = room['waterfall']
-room['waterfall'].s_to = room['cave']
-room['waterfall'].n_to = room['glen']
-room['cave'].n_to = room['waterfall']
+room['glen'].s_to = room['cliff']
+room['cliff'].s_to = 'locked'
+room['cliff'].n_to = room['glen']
+room['cave'].n_to = room['cliff']
 room['ruins'].w_to = room['garden']
 
 
@@ -82,6 +83,9 @@ item = {
     'key': Item('key', "An old iron key. It's a bit rusty.", True),
     'chicken': Item('chicken', "It stares at you blankly. It must be hiding something...", False),
     'gate': LockedItem('gate', "A large, imposing wrought-iron gate. It's closed and locked.", False),
+    'river': Item('river', "Shallow and rocky. The water foams and bubbles and it flows by.", False),
+    'waterfall': Item('waterfall', "It's falling at a tremendous rate. It could crush you easily.", False),
+    'dam': Item('dam', "Built from sticks and mud. Completely stopping up the river.", False)
 }
 
 # Add items to rooms
@@ -94,6 +98,8 @@ room['coop'].add_item(item['chicken'])
 room['forest'].add_item(item['knife'])
 room['glen'].add_item(item['beaver'])
 room['river'].add_item(item['lily'])
+room['river'].add_item(item['river'])
+room['cliff'].add_item(item['waterfall'])
 room['cave'].add_item(item['key'])
 
 # Add keys to locks
@@ -150,6 +156,20 @@ You are compelled to whittle a flute out of the soft wood. It plays a haunting t
         display_string += "\nYou offer the water lily to the beaver."
         display_string += "\nThe beaver sniffs at it then eats it right out of your hand."
         display_string += "\nIts eyes are filled with trust. It will follow you anywhere."
+        print(display_string)
+
+    def beaver_river(self, beaver, river):
+        self.player.current_room.add_item(beaver)
+        self.player.current_room.add_item(item['dam'])
+        room['cliff'].remove_item(item['waterfall'])
+        room['cliff'].s_to = room['cave']
+
+        display_string = ""
+        display_string += "\nYou place the beaver in the river."
+        display_string += "\nIt chatters rapidly. A large group of beavers emerges from the surrounding woods."
+        display_string += "\nYou feel something hit your head. You collapse on the river bank."
+        display_string += "\nWhen you wake up, the beaver is sitting alone atop a large dam."
+        display_string += "\nThe dam completely blocks the flow of the river."
         print(display_string)
 
 
