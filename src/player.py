@@ -5,7 +5,7 @@ from item import LightSource, UsableItem
 
 
 class Player:
-    
+
     def __init__(self, name, current_room):
         self.name = name
         self.current_room = current_room
@@ -90,7 +90,7 @@ class Player:
                 # check if the item used can be used on the target item
                 if item_target.name in item_used.used_on and hasattr(actions, f"{item_used.name}_{item_target.name}") and item_target.is_interactable:
                     getattr(actions, f"{item_used.name}_{item_target.name}")(
-                        self, self.current_room, item_used, item_target)
+                        self, item_used, item_target)
 
                 else:
                     print("That's not a good idea")

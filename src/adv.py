@@ -76,11 +76,12 @@ item = {
     'egg': UsableItem('egg', "Brown with some dark speckles", True, True, ('pedastel')),
     'knife': UsableItem('knife', "The blade is short, but sharp", True, True, ('wood')),
     'oil': UsableItem('oil', "A small canister of oil", True, False, ('lantern')),
-    'mushroom': Item('mushroom', "A little brown mushroom", True, True),
+    'mushroom': UsableItem('mushroom', "A little brown mushroom", True, True, ('chicken')),
     'beaver': UsableItem('beaver', "It won't stop chattering", False, False, ('river')),
     'flute': UsableItem('flute', "A hand-carved wooden flute. It's a little out of tune.", True, True, ('beaver')),
     'lily': UsableItem('lily', "A beautiful white water lily", True, True, ('beaver')),
     'key': UsableItem('key', "An old iron key. It's a bit rusty.", True, True, ('gate', 'lock')),
+    'chicken': Item('chicken', "It stares at you blankly. It must be hiding something...", True, False),
 }
 
 # Add items to rooms
@@ -89,7 +90,7 @@ room['shack'].add_item(item['wood'])
 room['shack'].add_item(item['lantern'])
 room['garden'].add_item(item['mushroom'])
 room['coop'].add_item(item['egg'])
-room['coop'].add_item(item['oil'])
+room['coop'].add_item(item['chicken'])
 room['forest'].add_item(item['knife'])
 room['glen'].add_item(item['beaver'])
 room['river'].add_item(item['lily'])
@@ -99,14 +100,14 @@ room['cave'].add_item(item['key'])
 # Define actions
 
 class Actions:
-    def oil_lantern(self, player, current_room, oil, lantern):
+    def oil_lantern(self, player, oil, lantern):
         player.remove_item(oil)
         player.is_lit = True
         lantern.is_lit = True
         print("Oil used on lantern")
         print("Lantern is now lit")
 
-    def knife_wood(self, player, current_room, knife, wood):
+    def knife_wood(self, player, knife, wood):
         player.remove_item(knife)
         player.remove_item(wood)
         player.add_item(item['flute'])
@@ -115,7 +116,22 @@ class Actions:
 You are compelled to whittle a flute out of the soft wood. It plays a haunting tune.""")
         print("Flute added to inventory")
 
-    def flute_beaver(self, player, current_room, flute, beaver):
+    def mushroom_chicken(self, player, mushroom, chicken):
+        player.remove_item(mushroom)
+        chicken.is_interactable = False
+        player.current_room.remove_item(chicken)
+        player.current_room.add_item(item['oil'])
+        item['oil'].is_gettable = True
+
+        display_string = ""
+        display_string += "\nYou offer the mushroom to the chicken."
+        display_string += "\nThe chicken snatches it out of your hand and gobbles it up in two quick gulps."
+        display_string += "\nIt bends its head to you in a deep bow and flaps its wings as it rushes out of the coop."
+        display_string += "\nYou try to see where it's headed, but all you see is the garden, deserted."
+        display_string += "\nA small canister of oil sits where the chicken was nesting."
+        print(display_string)
+
+    def flute_beaver(self, player, flute, beaver):
         beaver.is_interactable = True
         print("The beaver is drawn to the sound of the flute. It looks friendly now.")
 
