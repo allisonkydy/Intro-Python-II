@@ -12,5 +12,10 @@ class Item:
 
 
 class LightSource(Item):
-    def __init__(self, name, description):
+    def __init__(self, name, description, is_lit):
         super().__init__(name, description)
+        self.is_lit = is_lit
+
+    def on_drop(self):
+        print("It's unwise to drop your source of light")
+        print(f"You dropped the {self.name}")

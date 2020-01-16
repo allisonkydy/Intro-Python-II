@@ -5,35 +5,45 @@ from item import Item, LightSource
 # Declare all the rooms
 
 room = {
-    'shack':  Room("Shack", """The thin wooden walls are rotting and the floor is nothing but dirt. 
-It smells pretty bad in here. Light filters in from the door to the south."""),
+    'shack':  Room("Shack",
+                   """The thin wooden walls are rotting and the floor is nothing but dirt. 
+It smells pretty bad in here. Light filters in from the door to the south.""",
+                   True),
 
     'garden':    Room("Overgrown Garden", """It used to be a garden, but weeds have sprung up between the neatly planted rows. 
 The air carries a light floral fragrance. You hear the rustling of chickens to the west. 
-To the south is a large forest. A wrought-iron gate lies east. The small shack is just north."""),
+To the south is a large forest. A wrought-iron gate lies east. The small shack is just north.""",
+                      True),
 
     'coop': Room("Chicken Coop", """Cozy stalls hold about twenty dozing chickens. They look well-fed and content. 
-East is the door to the garden."""),
+East is the door to the garden.""",
+                 True),
 
     'ruins':   Room("Ancient Ruins", """Smooth, mossy rocks are scattered about. Some are still loosely connected, 
 forming the remains of a circular tower. An engraved pedastel lies in the center of the tower. 
-On its surface is an oblong indentation."""),
+On its surface is an oblong indentation.""",
+                    True),
 
     'forest': Room("Forest", """Trees tower over your head and the floor is thick with underbrush. 
 The canopy blocks out all light from above. You try not to look directly at the shadows. 
-A faint bubbling sound comes from the south. A small dirt path leads west."""),
+A faint bubbling sound comes from the south. A small dirt path leads west.""",
+                   False),
 
     'glen':   Room("Secluded Glen", """Mossy rocks slope gently down to a narrow stream. 
-The air is cool and damp. The path bends from east to south."""),
+The air is cool and damp. The path bends from east to south.""",
+                   True),
 
     'river':   Room("Bubbling River", """The river bubbles excitedly, flowing from east to west. 
-A small cluster of lily pads clings to rocks in the shallows."""),
+A small cluster of lily pads clings to rocks in the shallows.""",
+                    True),
 
     'waterfall':   Room("Waterfall", """Water cascades down from the cliff with a dull roar. 
-You squint your eyes against the spray. The path stretches to the north."""),
+You squint your eyes against the spray. The path stretches to the north.""",
+                        True),
 
     'cave':   Room("Secret Cave", """Aha, a hidden cave! The walls seem to glow with a faint light. 
-Water drops gently from cracks in the ceiling. The entrance is the to the north."""),
+Water drops gently from cracks in the ceiling. The entrance is the to the north.""",
+                   True),
 }
 
 
@@ -61,7 +71,7 @@ room['ruins'].w_to = room['garden']
 
 item = {
     'wood': Item('wood', "A plank of soft wood, perfect for carving"),
-    'lantern': LightSource('lantern', "It's one of those vintage ones that burn oil"),
+    'lantern': LightSource('lantern', "It's one of those vintage ones that burn oil", True),
     'egg': Item('egg', "Brown with some dark speckles"),
     'knife': Item('knife', "The blade is short, but sharp"),
     'oil': Item('oil', "A small canister of oil"),
@@ -107,13 +117,18 @@ def main():
     player = Player(input("Enter your name: "), room['shack'])
 
     while True:
-        current_room = player.current_room
-        # print the current room name
-        print(f"Current location: {current_room.name}")
-        # print current room description
-        print(current_room.description)
-        # print all items in the room
-        current_room.print_items()
+        current_room = player.current_room        
+
+        # if the current room is lit or the player has a light source that is lit
+        if current_room.is_lit or player.is_lit:
+            # print the current room name
+            print(f"Current location: {current_room.name}")
+            # print current room description
+            print(current_room.description)
+            # print all items in the room
+            current_room.print_items()
+        else:
+            print("It's pitch black. You hear strange whispers coming from the darkness...")
 
         # wait for user input
         user_input = input(">>> ")
@@ -162,6 +177,8 @@ def main():
                         current_room.remove_item(i)
                         player.add_item(i)
                         i.on_take()
+                        if i.is_lit:
+                            player.is_lit = True
                         break
                 # print error message
                 else:

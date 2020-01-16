@@ -6,6 +6,7 @@ class Player:
         self.name = name
         self.current_room = current_room
         self.inventory = []
+        self.is_lit = False
 
     def change_room(self, new_room):
         self.current_room = new_room
