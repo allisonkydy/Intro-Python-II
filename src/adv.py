@@ -116,8 +116,10 @@ def main():
     # make a new player that is currently in the shack
     player = Player(input("Enter your name: "), room['shack'])
 
+    prev_room = None
+
     while True:
-        current_room = player.current_room        
+        current_room = player.current_room
 
         # if the current room is lit or the player has a light source that is lit
         if current_room.is_lit or player.is_lit:
@@ -145,7 +147,11 @@ def main():
                     current_room, f"{user_input}_to")
                 # if movement is allowed, update the current room
                 if attempted_room != None:
-                    player.change_room(attempted_room)
+                    if (current_room.is_lit or player.is_lit) or attempted_room == prev_room:
+                        player.change_room(attempted_room)
+                        prev_room = current_room
+                    else:
+                        print("It's too dark to see that way")
                 # print error message if movement is not allowed
                 else:
                     print("You cannot move in that direction")
