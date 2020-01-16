@@ -100,27 +100,30 @@ room['cave'].add_item(item['key'])
 # Define actions
 
 class Actions:
-    def oil_lantern(self, player, oil, lantern):
-        player.remove_item(oil)
-        player.is_lit = True
+    def __init__(self, player):
+        self.player = player
+
+    def oil_lantern(self, oil, lantern):
+        self.player.remove_item(oil)
+        self.player.is_lit = True
         lantern.is_lit = True
         print("Oil used on lantern")
         print("Lantern is now lit")
 
-    def knife_wood(self, player, knife, wood):
-        player.remove_item(knife)
-        player.remove_item(wood)
-        player.add_item(item['flute'])
+    def knife_wood(self, knife, wood):
+        self.player.remove_item(knife)
+        self.player.remove_item(wood)
+        self.player.add_item(item['flute'])
         print("Knife used on wood")
         print("""A mysterious creative energy guides your hand. 
 You are compelled to whittle a flute out of the soft wood. It plays a haunting tune.""")
         print("Flute added to inventory")
 
-    def mushroom_chicken(self, player, mushroom, chicken):
-        player.remove_item(mushroom)
+    def mushroom_chicken(self, mushroom, chicken):
+        self.player.remove_item(mushroom)
         chicken.is_interactable = False
-        player.current_room.remove_item(chicken)
-        player.current_room.add_item(item['oil'])
+        self.player.current_room.remove_item(chicken)
+        self.player.current_room.add_item(item['oil'])
         item['oil'].is_gettable = True
 
         display_string = ""
@@ -131,9 +134,11 @@ You are compelled to whittle a flute out of the soft wood. It plays a haunting t
         display_string += "\nA small canister of oil sits where the chicken was nesting."
         print(display_string)
 
-    def flute_beaver(self, player, flute, beaver):
+    def flute_beaver(self, flute, beaver):
         beaver.is_interactable = True
         print("The beaver is drawn to the sound of the flute. It looks friendly now.")
+
+    # def lily_beaver(self, player, )
 
 
 #
@@ -158,7 +163,7 @@ def main():
     # make a new player that is currently in the shack
     player = Player(input("Enter your name: "), room['shack'])
 
-    actions = Actions()
+    actions = Actions(player)
 
     directions = ('n', 's', 'e', 'w')
 
