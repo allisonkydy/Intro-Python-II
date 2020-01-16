@@ -119,7 +119,7 @@ def main():
 
     prev_room = None
 
-    # actions = Actions()
+    actions = Actions()
 
     while True:
         current_room = player.current_room
@@ -130,9 +130,10 @@ def main():
             print(f"Current location: {current_room.name}")
             # print current room description
             print(current_room.description)
-            
+
         else:
-            print("It's pitch black. You hear strange whispers coming from the darkness...")
+            print(
+                "It's pitch black. You hear strange whispers coming from the darkness...")
 
         # wait for user input
         user_input = input(">>> ")
@@ -186,7 +187,7 @@ def main():
             if verb == 'get' or verb == 'take':
                 # check if item is in the room
                 if current_room.is_lit or player.is_lit:
-                    if object_name in item and not item[object_name] in player.inventory:
+                    if object_name in item and item[object_name] in current_room.items:
                         i = item[object_name]
                         # remove from room and add to player's inventory
                         current_room.remove_item(i)
@@ -230,15 +231,27 @@ def main():
                 print("Input not valid, please try again")
 
         # if the form of the input is 'use [item] on [item]'
-        # elif input_length == 4 and user_input[0] == "use" and user_input[2] == "on":
-        #     item_used = user_input[1]
-        #     item_target = user_input[3]
+        elif input_length == 4 and user_input[0] == "use" and user_input[2] == "on":
+            item_used = user_input[1]
+            item_target = user_input[3]
 
-        #     # check if player has the item used
-        #     # check if that item is usable
-        #     # check if the item used can be used on the target item
+            # check if items exist
+            # check if player has the item used
+            if item_used in item and item_target in item and item[item_used] in player.inventory:
+                # check if that item is usable
+                if isinstance(item[item_used], UsableItem):
+                    # check if the item used can be used on the target item
+                    if hasattr(actions, f"{item_used}_{item_target}"):
+                        getattr(actions, f"{item_used}_{item_target}")(player, item[item_used], item[item_target])
 
-        #     if 
+                    else:
+                        ("That's not a good idea")
+
+                else:
+                    print("You can't use that")
+
+            else:
+                print("You don't have that in your inventory")
 
         # print error message if user enters invalid input
         else:
