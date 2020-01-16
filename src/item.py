@@ -19,3 +19,9 @@ class LightSource(Item):
     def on_drop(self):
         print("It's unwise to drop your source of light")
         print(f"You dropped the {self.name}")
+
+class UsableItem(Item):
+    def __init__(self, name, description, used_on):
+        super().__init__(name, description)
+        self.used_on = used_on
+        self.is_used = False

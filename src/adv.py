@@ -1,6 +1,6 @@
 from room import Room
 from player import Player
-from item import Item, LightSource
+from item import Item, LightSource, UsableItem
 
 # Declare all the rooms
 
@@ -72,14 +72,14 @@ room['ruins'].w_to = room['garden']
 item = {
     'wood': Item('wood', "A plank of soft wood, perfect for carving"),
     'lantern': LightSource('lantern', "It's one of those vintage ones that burn oil", True),
-    'egg': Item('egg', "Brown with some dark speckles"),
-    'knife': Item('knife', "The blade is short, but sharp"),
-    'oil': Item('oil', "A small canister of oil"),
+    'egg': UsableItem('egg', "Brown with some dark speckles", ('pedastel')),
+    'knife': UsableItem('knife', "The blade is short, but sharp", ('wood')),
+    'oil': UsableItem('oil', "A small canister of oil", ('lantern')),
     'mushroom': Item('mushroom', "A little brown mushroom"),
-    'beaver': Item('beaver', "It won't stop chattering"),
-    'flute': Item('flute', "A hand-carved wooden flute. It's a little out of tune."),
-    'lily': Item('lily', "A beautiful white water lily"),
-    'key': Item('key', "An old iron key. It's a bit rusty."),
+    'beaver': UsableItem('beaver', "It won't stop chattering", ('river')),
+    'flute': UsableItem('flute', "A hand-carved wooden flute. It's a little out of tune.", ('beaver')),
+    'lily': UsableItem('lily', "A beautiful white water lily", ('beaver')),
+    'key': UsableItem('key', "An old iron key. It's a bit rusty.", ('gate', 'lock')),
 }
 
 # Add items to rooms
