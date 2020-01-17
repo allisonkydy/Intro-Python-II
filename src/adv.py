@@ -72,7 +72,7 @@ item = {
     'wood': Item('wood', "A plank of soft wood, perfect for carving", True, "A fresh plank of wood leans against the far wall."),
     'lantern': LightSource('lantern', "It's one of those vintage ones that burn oil.", True, "A lantern sits in the corner."),
     'egg': Item('egg', "Brown with some dark speckles", True, "An egg sits in one of the empty nests."),
-    'knife': Item('knife', "The blade is short, but sharp", True, "A sharp knife pokes out from under a bush."),
+    'knife': Item('knife', "The blade is short, but sharp.", True, "A sharp knife pokes out from under a bush."),
     'oil': Item('oil', "A small canister of oil", False, "There's an oil canister where the chicken was sitting."),
     'mushroom': Item('mushroom', "A little brown mushroom", True, "A single mushroom pokes out of an old stump."),
     'beaver': LockedItem('beaver', "It won't stop chattering.", False, "There's a beaver on the far bank. It's chattering nervously."),
@@ -262,7 +262,7 @@ def main():
 
     # Ending screens
 
-    good_end = f"\n\n\n\n\n\nYou reached the end, {player.name} You survived.\n\nI hope you enjoyed yourself.\n\n\n\n"
+    good_end = f"\n\n\n\n\n\nYou reached the end, {player.name}. You survived.\n\nI hope you enjoyed yourself.\n\n\n\n"
     # bad_end = ""
 
     actions = Actions(player)
