@@ -20,8 +20,7 @@ East is the door to the garden.""",
                  True),
 
     'ruins':   Room("Ancient Ruins", """Smooth, mossy rocks are scattered about. Some are still loosely connected, 
-forming the remains of a circular tower. An engraved pedastel lies in the center of the tower. 
-On its surface is an oblong indentation.""",
+forming the remains of a circular tower. An engraved pedastel lies in the center of the tower.""",
                     True),
 
     'forest': Room("Forest", """Trees tower over your head and the floor is thick with underbrush. 
@@ -85,7 +84,8 @@ item = {
     'gate': LockedItem('gate', "A large, imposing wrought-iron gate. It's closed and locked.", False),
     'river': Item('river', "Shallow and rocky. The water foams and bubbles and it flows by.", False),
     'waterfall': Item('waterfall', "It's falling at a tremendous rate. It could crush you easily.", False),
-    'dam': Item('dam', "Built from sticks and mud. Completely stopping up the river.", False)
+    'dam': Item('dam', "Built from sticks and mud. Completely stopping up the river.", False),
+    'pedastel': LockedItem('pedastel', "It's covered in strange markings. On its surface is an oblong indentation.", False),
 }
 
 # Add items to rooms
@@ -93,6 +93,7 @@ item = {
 room['shack'].add_item(item['wood'])
 room['shack'].add_item(item['lantern'])
 room['garden'].add_item(item['mushroom'])
+room['garden'].add_item(item['gate'])
 room['coop'].add_item(item['egg'])
 room['coop'].add_item(item['chicken'])
 room['forest'].add_item(item['knife'])
@@ -101,11 +102,13 @@ room['river'].add_item(item['lily'])
 room['river'].add_item(item['river'])
 room['cliff'].add_item(item['waterfall'])
 room['cave'].add_item(item['key'])
+room['ruins'].add_item(item['pedastel'])
 
 # Add keys to locks
 
 item['beaver'].key = item['flute']
 item['gate'].key = item['key']
+item['pedastel'].key = item['egg']
 
 
 # Define actions
@@ -160,6 +163,8 @@ You are compelled to whittle a flute out of the soft wood. It plays a haunting t
 
     def beaver_river(self, beaver, river):
         self.player.current_room.add_item(beaver)
+        beaver.is_gettable = False
+        beaver.is_locked = False
         self.player.current_room.add_item(item['dam'])
         room['cliff'].remove_item(item['waterfall'])
         room['cliff'].s_to = room['cave']
@@ -171,6 +176,31 @@ You are compelled to whittle a flute out of the soft wood. It plays a haunting t
         display_string += "\nWhen you wake up, the beaver is sitting alone atop a large dam."
         display_string += "\nThe dam completely blocks the flow of the river."
         print(display_string)
+
+    def key_gate(self, key, gate):
+        self.player.remove_item(key)
+        gate.is_locked = False
+        room['garden'].e_to = room['ruins']
+
+        display_string = ""
+        display_string += "\nYou insert the key into the lock."
+        display_string += "\nThe gate swings open with a groan."
+        print(display_string)
+
+    def egg_pedastel(self, egg, pedastel):
+        pedastel.is_locked = False
+        self.player.remove_item(egg)
+        self.player.current_room.add_item(egg)
+
+        display_string = ""
+        display_string += "\nYou insert the egg into the indentation on the pedastel."
+        display_string += "\nYour hands glow blue for a few seconds, then return to normal."
+        display_string += "\nThe pedastel starts to vibrate, slowly at first, then faster and faster until"
+        display_string += "\nit stops abruptly with the sound of a gong. You pick up the egg and gently tap"
+        display_string += "\nthe shell against the worn stone. A perfect hard boil. You groan."
+        display_string += "\n\nYou hate hard-boiled eggs."
+        print(display_string)
+
 
 
 #
@@ -258,7 +288,7 @@ def main():
                 player.drop_item(item[object_name])
 
             # look at item
-            elif verb == 'look':
+            elif verb == 'look' or verb == 'l':
                 player.look_item(item[object_name])
 
             # print error message if user enters invalid input
