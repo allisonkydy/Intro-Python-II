@@ -28,8 +28,12 @@ class LightSource(Item):
         self.description += " It's currently lit."
 
 class LockedItem(Item):
-    def __init__(self, name, description, is_gettable, location_desc):
+    def __init__(self, name, description, is_gettable, location_desc, locked_message):
         super().__init__(name, description, is_gettable, location_desc)
         self.is_locked = True
         self.key = None
+        self.locked_message = locked_message
+
+    def print_locked_message(self):
+        print(self.locked_message)
 

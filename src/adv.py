@@ -75,16 +75,16 @@ item = {
     'knife': Item('knife', "The blade is short, but sharp.", True, "A sharp knife pokes out from under a bush."),
     'oil': Item('oil', "A small canister of oil", False, "There's an oil canister where the chicken was sitting."),
     'mushroom': Item('mushroom', "A little brown mushroom", True, "A single mushroom pokes out of an old stump."),
-    'beaver': LockedItem('beaver', "It won't stop chattering.", False, "There's a beaver on the far bank. It's chattering nervously."),
+    'beaver': LockedItem('beaver', "It won't stop chattering.", False, "There's a beaver on the far bank. It's chattering nervously.", "It's too nervous to look at that."),
     'flute': Item('flute', "A hand-carved wooden flute. It's a little out of tune.", True, "A wooden flute lies on the ground."),
     'lily': Item('lily', "A beautiful white water lily", True, "You see a lily in bloom on the lily pads."),
     'key': Item('key', "An old iron key. It's a bit rusty.", True, "A single key lies at the bottom of a shallow pool."),
     'chicken': Item('chicken', "It stares at you blankly. It must be hiding something...", False, "One of the chickens is awake and looks at you intently."),
-    'gate': LockedItem('gate', "A large, imposing wrought-iron gate. It's closed and locked.", False, "The gate is closed and locked."),
+    'gate': LockedItem('gate', "A large, imposing wrought-iron gate. It's closed and locked.", False, "The gate is closed and locked.", "That won't fit in the lock."),
     'river': Item('river', "Shallow and rocky. The water foams and bubbles and it flows by.", False, "The river flows by."),
     'waterfall': Item('waterfall', "It's falling at a tremendous rate. It could crush you easily.", False, "The large waterfall blocks your path in the southern direction."),
     'dam': Item('dam', "Built with love from sticks and mud", False, "A large dam blocks the flow of the river."),
-    'pedastel': LockedItem('pedastel', "It's covered in strange markings. On its surface is an oblong indentation.", False, "An engraved pedastel lies in the center of the tower."),
+    'pedastel': LockedItem('pedastel', "It's covered in strange markings. On its surface is an oblong indentation.", False, "An engraved pedastel lies in the center of the tower.", "That won't fit there."),
 }
 
 # Add items to rooms
@@ -149,6 +149,7 @@ class Actions:
         print(display_string)
 
     def flute_beaver(self, flute, beaver):
+        self.player.remove_item(flute)
         beaver.is_locked = False
         beaver.description = "It looks at you expectantly."
         beaver.location_desc = "The beaver sits on a rock near you."

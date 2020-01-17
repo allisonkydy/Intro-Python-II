@@ -113,6 +113,6 @@ class Player:
             elif item_target.is_locked and item_target.key is item_used:
                 getattr(actions, f"{item_used.name}_{item_target.name}")(item_used, item_target)
             else:
-                print("Locked")
+                item_target.print_locked_message()
         else:
             print("You don't have that")
