@@ -116,6 +116,7 @@ item['pedastel'].key = item['egg']
 class Actions:
     def __init__(self, player):
         self.player = player
+        self.result = None
 
     def oil_lantern(self, oil, lantern):
         self.player.remove_item(oil)
@@ -163,6 +164,7 @@ You are compelled to whittle a flute out of the soft wood. It plays a haunting t
 
     def beaver_river(self, beaver, river):
         self.player.current_room.add_item(beaver)
+        self.player.remove_item(beaver)
         beaver.is_gettable = False
         beaver.is_locked = False
         self.player.current_room.add_item(item['dam'])
@@ -201,7 +203,12 @@ You are compelled to whittle a flute out of the soft wood. It plays a haunting t
         display_string += "\n\nYou hate hard-boiled eggs."
         print(display_string)
 
+        self.result = 'good end'
 
+# Ending screens
+
+good_end = "\n\n\n\n\n\nYou reached the end. You survived.\n\nI hope you enjoyed yourself.\n\n\n\n"
+# bad_end = ""
 
 #
 # Main
@@ -230,6 +237,12 @@ def main():
     directions = ('n', 's', 'e', 'w')
 
     while True:
+
+        if actions.result == 'good end':
+            print(good_end)
+            break
+        # elif actions.result == 'bad end':
+
         current_room = player.current_room
 
         # if the current room is lit or the player has a light source that is lit
@@ -265,6 +278,7 @@ def main():
 
             # if user enters q, quit the game
             elif user_input == 'q':
+                print("Thank you for playing")
                 break
 
             # print error message if user enters invalid input
