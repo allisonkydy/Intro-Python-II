@@ -1,6 +1,6 @@
 
 class Item:
-    def __init__(self, name, description, is_gettable, location_desc=None):
+    def __init__(self, name, description, is_gettable, location_desc):
         self.name = name
         self.description = description
         self.is_gettable = is_gettable
@@ -10,6 +10,7 @@ class Item:
         print(f"You pick up the {self.name}")
 
     def on_drop(self):
+        self.location_desc = f"The {self.name} lies on the ground."
         print(f"You drop the {self.name}")
 
 
@@ -21,6 +22,10 @@ class LightSource(Item):
     def on_drop(self):
         print("It's unwise to drop your source of light")
         print(f"You drop the {self.name}")
+
+    def light_on(self):
+        self.is_lit = True
+        self.description += " It's currently lit."
 
 class LockedItem(Item):
     def __init__(self, name, description, is_gettable, location_desc):

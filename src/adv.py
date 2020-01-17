@@ -12,7 +12,7 @@ It smells pretty bad in here. Light filters in from the door to the south.""",
 
     'garden':    Room("Overgrown Garden", """It used to be a garden, but weeds have sprung up between the neatly planted rows. 
 The air carries a light floral fragrance. You hear the rustling of chickens to the west. 
-To the south is a large forest. The small shack is just north.""",
+An iron gate guards the path east. To the south is a large forest. The small shack is just north.""",
                       True),
 
     'coop': Room("Chicken Coop", """Cozy stalls hold about twenty dozing chickens. They look well-fed and content. 
@@ -32,7 +32,7 @@ A faint bubbling sound comes from the south. A small dirt path leads west.""",
 The air is cool and damp. The path bends from east to south.""",
                    True),
 
-    'river':   Room("Bubbling River", """The river bubbles excitedly, flowing from east to west. 
+    'river':   Room("River", """The river bubbles excitedly, flowing from east to west. 
 A small cluster of lily pads clings to rocks in the shallows.""",
                     True),
 
@@ -41,7 +41,7 @@ You squint your eyes against the spray. The path stretches to the north and sout
                         True),
 
     'cave':   Room("Secret Cave", """Aha, a hidden cave! The walls seem to glow with a faint light. 
-Water drops gently from cracks in the ceiling. The entrance is the to the north.""",
+Water drops gently from cracks in the ceiling. The entrance is to the north.""",
                    True),
 }
 
@@ -70,18 +70,18 @@ room['ruins'].w_to = room['garden']
 
 item = {
     'wood': Item('wood', "A plank of soft wood, perfect for carving", True, "A fresh plank of wood leans against the far wall."),
-    'lantern': LightSource('lantern', "It's one of those vintage ones that burn oil", True, "A lantern sits in the corner."),
+    'lantern': LightSource('lantern', "It's one of those vintage ones that burn oil.", True, "A lantern sits in the corner."),
     'egg': Item('egg', "Brown with some dark speckles", True, "An egg sits in one of the empty nests."),
-    'knife': Item('knife', "The blade is short, but sharp", True, "A sharp knife pokes out from under a bush"),
+    'knife': Item('knife', "The blade is short, but sharp", True, "A sharp knife pokes out from under a bush."),
     'oil': Item('oil', "A small canister of oil", False, "There's an oil canister where the chicken was sitting."),
     'mushroom': Item('mushroom', "A little brown mushroom", True, "A single mushroom pokes out of an old stump."),
-    'beaver': LockedItem('beaver', "It won't stop chattering", False, "There's a beaver on the far bank. It's chattering nervously."),
+    'beaver': LockedItem('beaver', "It won't stop chattering.", False, "There's a beaver on the far bank. It's chattering nervously."),
     'flute': Item('flute', "A hand-carved wooden flute. It's a little out of tune.", True, "A wooden flute lies on the ground."),
     'lily': Item('lily', "A beautiful white water lily", True, "You see a lily in bloom on the lily pads."),
     'key': Item('key', "An old iron key. It's a bit rusty.", True, "A single key lies at the bottom of a shallow pool."),
     'chicken': Item('chicken', "It stares at you blankly. It must be hiding something...", False, "One of the chickens is awake and looks at you intently."),
-    'gate': LockedItem('gate', "A large, imposing wrought-iron gate. It's closed and locked.", False, "To the east is an iron gate."),
-    'river': Item('river', "Shallow and rocky. The water foams and bubbles and it flows by.", False),
+    'gate': LockedItem('gate', "A large, imposing wrought-iron gate. It's closed and locked.", False, "The gate is closed and locked."),
+    'river': Item('river', "Shallow and rocky. The water foams and bubbles and it flows by.", False, "The river flows by."),
     'waterfall': Item('waterfall', "It's falling at a tremendous rate. It could crush you easily.", False, "The large waterfall blocks your path in the southern direction."),
     'dam': Item('dam', "Built with love from sticks and mud", False, "A large dam blocks the flow of the river."),
     'pedastel': LockedItem('pedastel', "It's covered in strange markings. On its surface is an oblong indentation.", False, "An engraved pedastel lies in the center of the tower."),
@@ -120,18 +120,19 @@ class Actions:
     def oil_lantern(self, oil, lantern):
         self.player.remove_item(oil)
         self.player.is_lit = True
-        lantern.is_lit = True
-        print("Oil used on lantern")
-        print("Lantern is now lit")
+        lantern.light_on()
+        print("You fill the lantern with oil.\nThe lantern is now lit.")
 
     def knife_wood(self, knife, wood):
         self.player.remove_item(knife)
         self.player.remove_item(wood)
         self.player.add_item(item['flute'])
-        print("Knife used on wood")
-        print("""A mysterious creative energy guides your hand. 
-You are compelled to whittle a flute out of the soft wood. It plays a haunting tune.""")
-        print("Flute added to inventory")
+
+        display_string = ""
+        display_string += "You start carving the soft wood with the knife."
+        display_string += "\nA mysterious creative energy guides your hand."
+        display_string += "\nYou are compelled to whittle a flute. It plays a calming tune."
+        print(display_string)
 
     def mushroom_chicken(self, mushroom, chicken):
         self.player.remove_item(mushroom)
@@ -140,7 +141,7 @@ You are compelled to whittle a flute out of the soft wood. It plays a haunting t
         item['oil'].is_gettable = True
 
         display_string = ""
-        display_string += "\nYou offer the mushroom to the chicken."
+        display_string += "You offer the mushroom to the chicken."
         display_string += "\nThe chicken snatches it out of your hand and gobbles it up in two quick gulps."
         display_string += "\nIt bends its head to you in a deep bow and flaps its wings as it rushes out of the coop."
         display_string += "\nYou try to see where it's headed, but all you see is the garden, deserted."
@@ -149,14 +150,18 @@ You are compelled to whittle a flute out of the soft wood. It plays a haunting t
 
     def flute_beaver(self, flute, beaver):
         beaver.is_locked = False
+        beaver.description = "It looks at you expectantly."
+        beaver.location_desc = "The beaver sits on a rock near you."
         print("The beaver is drawn to the sound of the flute. It looks friendly now.")
 
     def lily_beaver(self, lily, beaver):
         beaver.is_gettable = True
         self.player.remove_item(lily)
+        beaver.description = "It chatters playfully."
+        beaver.location_desc = "The beaver is right at your feet, thumping its tail with excitement."
 
         display_string = ""
-        display_string += "\nYou offer the water lily to the beaver."
+        display_string += "You offer the water lily to the beaver."
         display_string += "\nThe beaver sniffs at it then eats it right out of your hand."
         display_string += "\nIts eyes are filled with trust. It will follow you anywhere."
         print(display_string)
@@ -166,12 +171,21 @@ You are compelled to whittle a flute out of the soft wood. It plays a haunting t
         self.player.remove_item(beaver)
         beaver.is_gettable = False
         beaver.is_locked = False
+        beaver.description = "It's resting happily."
+        beaver.location_desc = "The beaver is sitting on top of the dam"
         self.player.current_room.add_item(item['dam'])
         room['cliff'].remove_item(item['waterfall'])
         room['cliff'].s_to = room['cave']
+        room['cliff'].description = """The cliff towers above you, silent and serene. A small trickle of water runs 
+down its face. There's a small opening in the rock where the waterfall once was. 
+The path stretches to the north and south."""
+        river.description = "Shallow and rocky. It's blocked by the beavers' dam."
+        river.location_desc = "The river no longer flows."
+        room['river'].description = """A large beaver dam spans the river, stopping the flow. 
+A small cluster of lily pads clings to rocks in the shallows."""
 
         display_string = ""
-        display_string += "\nYou place the beaver in the river."
+        display_string += "You place the beaver in the river."
         display_string += "\nIt chatters rapidly. A large group of beavers emerges from the surrounding woods."
         display_string += "\nYou feel something hit your head. You collapse on the river bank."
         display_string += "\nWhen you wake up, the beaver is sitting alone atop a large dam."
@@ -182,9 +196,11 @@ You are compelled to whittle a flute out of the soft wood. It plays a haunting t
         self.player.remove_item(key)
         gate.is_locked = False
         room['garden'].e_to = room['ruins']
+        gate.description = "A large, imposing wrought-iron gate. It's swung open."
+        gate.location_desc = "The gate is open."
 
         display_string = ""
-        display_string += "\nYou insert the key into the lock."
+        display_string += "You insert the key into the lock."
         display_string += "\nThe gate swings open with a groan."
         print(display_string)
 
@@ -194,7 +210,7 @@ You are compelled to whittle a flute out of the soft wood. It plays a haunting t
         self.player.current_room.add_item(egg)
 
         display_string = ""
-        display_string += "\nYou insert the egg into the indentation on the pedastel."
+        display_string += "You insert the egg into the indentation on the pedastel."
         display_string += "\nYour hands glow blue for a few seconds, then return to normal."
         display_string += "\nThe pedastel starts to vibrate, slowly at first, then faster and faster until"
         display_string += "\nit stops abruptly with the sound of a gong. You pick up the egg and gently tap"
@@ -249,8 +265,10 @@ def main():
             print(player.current_room)
 
         else:
-            print(
-                "\nIt's pitch black. You hear strange whispers coming from the darkness...")
+            display_string = ""
+            display_string += "\n---------------------------------------------------------------------------\n"
+            display_string += "\nIt's pitch black. You hear strange whispers coming from the darkness...\n\n"
+            print(display_string)
 
         # wait for user input
         user_input = input(">>> ")
@@ -318,7 +336,7 @@ def main():
                 player.use_item_on_item(item[item_used], item[item_target], actions)
 
             else:
-                print("At least one of those does not exist")
+                print("Whoops, that won't work")
 
         # print error message if user enters invalid input
         else:
