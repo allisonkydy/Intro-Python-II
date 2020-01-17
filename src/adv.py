@@ -220,10 +220,22 @@ A small cluster of lily pads clings to rocks in the shallows."""
 
         self.result = 'good end'
 
-# Ending screens
 
-good_end = "\n\n\n\n\n\nYou reached the end. You survived.\n\nI hope you enjoyed yourself.\n\n\n\n"
-# bad_end = ""
+# Controls
+
+controls = """
+    Controls:
+
+    move using 'n', 's', 'e', 'w'
+    'get [item]' or 'take [item]' to pick up items
+    'drop [item]' to drop items
+    'look' or 'l' to look around
+        you can also 'look [item]'
+    'use [item] on [item]' to use an item
+    'inventory' or 'i' to see what you're carrying
+    'help' or 'h' to view controls
+    'quit' or 'q' to quit the game
+"""
 
 #
 # Main
@@ -244,12 +256,29 @@ good_end = "\n\n\n\n\n\nYou reached the end. You survived.\n\nI hope you enjoyed
 
 
 def main():
+
     # make a new player that is currently in the shack
     player = Player(input("\n\nEnter your name: "), room['shack'])
+
+    # Ending screens
+
+    good_end = f"\n\n\n\n\n\nYou reached the end, {player.name} You survived.\n\nI hope you enjoyed yourself.\n\n\n\n"
+    # bad_end = ""
 
     actions = Actions(player)
 
     directions = ('n', 's', 'e', 'w')
+
+    print("\n   Welcome to...\n")
+    print("""
+     _   _                                     _   
+    | |_(_)_ __  _   _    __ _ _   _  ___  ___| |_ 
+    | __| | '_ \| | | |  / _` | | | |/ _ \/ __| __|
+    | |_| | | | | |_| | | (_| | |_| |  __/\__ \ |_ 
+     \__|_|_| |_|\__, |  \__, |\__,_|\___||___/\__|
+                 |___/      |_|                    
+""")
+    print(controls)
 
     while True:
         # check if player has reached an end state
@@ -293,9 +322,13 @@ def main():
             elif user_input == 'i' or user_input == 'inventory':
                 player.print_inventory()
 
+            # show controls if 'help' or 'h' entered
+            elif user_input == 'h' or user_input == 'help':
+                print(controls)
+
             # if user enters q, quit the game
             elif user_input == 'q':
-                print("Thank you for playing")
+                print(f"Thank you for playing, {player.name}")
                 break
 
             # print error message if user enters invalid input
@@ -321,6 +354,10 @@ def main():
             # look at item
             elif verb == 'look' or verb == 'l':
                 player.look_item(item[object_name])
+
+            # error message for improper usage of 'use'
+            elif verb == 'use':
+                print("What should I use this on?")
 
             # print error message if user enters invalid input
             else:
