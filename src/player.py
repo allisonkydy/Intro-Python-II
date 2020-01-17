@@ -21,6 +21,16 @@ class Player:
                 if (self.current_room.is_lit or self.is_lit) or next_room == self.prev_room:
                     self.prev_room = self.current_room
                     self.current_room = next_room
+                    
+                    if direction == 'n':
+                        print("You move north")
+                    elif direction == 's':
+                        print("You move south")
+                    elif direction == 'e':
+                        print("You move east")
+                    elif direction == 'w':
+                        print("You move west")
+
                 else:
                     print("It's too dark to see that way")
             else:

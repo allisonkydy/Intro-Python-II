@@ -12,7 +12,7 @@ It smells pretty bad in here. Light filters in from the door to the south.""",
 
     'garden':    Room("Overgrown Garden", """It used to be a garden, but weeds have sprung up between the neatly planted rows. 
 The air carries a light floral fragrance. You hear the rustling of chickens to the west. 
-To the south is a large forest. A wrought-iron gate lies east. The small shack is just north.""",
+To the south is a large forest. The small shack is just north.""",
                       True),
 
     'coop': Room("Chicken Coop", """Cozy stalls hold about twenty dozing chickens. They look well-fed and content. 
@@ -20,7 +20,7 @@ East is the door to the garden.""",
                  True),
 
     'ruins':   Room("Ancient Ruins", """Smooth, mossy rocks are scattered about. Some are still loosely connected, 
-forming the remains of a circular tower. An engraved pedastel lies in the center of the tower.""",
+forming the remains of a circular tower.""",
                     True),
 
     'forest': Room("Forest", """Trees tower over your head and the floor is thick with underbrush. 
@@ -37,8 +37,7 @@ A small cluster of lily pads clings to rocks in the shallows.""",
                     True),
 
     'cliff':   Room("Tall Cliff", """Water cascades down from the cliff with a dull roar. 
-You squint your eyes against the spray. The path stretches to the north and south.
-The large waterfall blocks your path in the southern direction.""",
+You squint your eyes against the spray. The path stretches to the north and south.""",
                         True),
 
     'cave':   Room("Secret Cave", """Aha, a hidden cave! The walls seem to glow with a faint light. 
@@ -70,22 +69,22 @@ room['ruins'].w_to = room['garden']
 # Declare items
 
 item = {
-    'wood': Item('wood', "A plank of soft wood, perfect for carving", True),
-    'lantern': LightSource('lantern', "It's one of those vintage ones that burn oil", True),
-    'egg': Item('egg', "Brown with some dark speckles", True),
-    'knife': Item('knife', "The blade is short, but sharp", True),
-    'oil': Item('oil', "A small canister of oil", False),
-    'mushroom': Item('mushroom', "A little brown mushroom", True),
-    'beaver': LockedItem('beaver', "It won't stop chattering", False),
-    'flute': Item('flute', "A hand-carved wooden flute. It's a little out of tune.", True),
-    'lily': Item('lily', "A beautiful white water lily", True),
-    'key': Item('key', "An old iron key. It's a bit rusty.", True),
-    'chicken': Item('chicken', "It stares at you blankly. It must be hiding something...", False),
-    'gate': LockedItem('gate', "A large, imposing wrought-iron gate. It's closed and locked.", False),
+    'wood': Item('wood', "A plank of soft wood, perfect for carving", True, "A fresh plank of wood leans against the far wall."),
+    'lantern': LightSource('lantern', "It's one of those vintage ones that burn oil", True, "A lantern sits in the corner."),
+    'egg': Item('egg', "Brown with some dark speckles", True, "An egg sits in one of the empty nests."),
+    'knife': Item('knife', "The blade is short, but sharp", True, "A sharp knife pokes out from under a bush"),
+    'oil': Item('oil', "A small canister of oil", False, "There's an oil canister where the chicken was sitting."),
+    'mushroom': Item('mushroom', "A little brown mushroom", True, "A single mushroom pokes out of an old stump."),
+    'beaver': LockedItem('beaver', "It won't stop chattering", False, "There's a beaver on the far bank. It's chattering nervously."),
+    'flute': Item('flute', "A hand-carved wooden flute. It's a little out of tune.", True, "A wooden flute lies on the ground."),
+    'lily': Item('lily', "A beautiful white water lily", True, "You see a lily in bloom on the lily pads."),
+    'key': Item('key', "An old iron key. It's a bit rusty.", True, "A single key lies at the bottom of a shallow pool."),
+    'chicken': Item('chicken', "It stares at you blankly. It must be hiding something...", False, "One of the chickens is awake and looks at you intently."),
+    'gate': LockedItem('gate', "A large, imposing wrought-iron gate. It's closed and locked.", False, "To the east is an iron gate."),
     'river': Item('river', "Shallow and rocky. The water foams and bubbles and it flows by.", False),
-    'waterfall': Item('waterfall', "It's falling at a tremendous rate. It could crush you easily.", False),
-    'dam': Item('dam', "Built from sticks and mud. Completely stopping up the river.", False),
-    'pedastel': LockedItem('pedastel', "It's covered in strange markings. On its surface is an oblong indentation.", False),
+    'waterfall': Item('waterfall', "It's falling at a tremendous rate. It could crush you easily.", False, "The large waterfall blocks your path in the southern direction."),
+    'dam': Item('dam', "Built with love from sticks and mud", False, "A large dam blocks the flow of the river."),
+    'pedastel': LockedItem('pedastel', "It's covered in strange markings. On its surface is an oblong indentation.", False, "An engraved pedastel lies in the center of the tower."),
 }
 
 # Add items to rooms
@@ -230,14 +229,14 @@ good_end = "\n\n\n\n\n\nYou reached the end. You survived.\n\nI hope you enjoyed
 
 def main():
     # make a new player that is currently in the shack
-    player = Player(input("Enter your name: "), room['shack'])
+    player = Player(input("\n\nEnter your name: "), room['shack'])
 
     actions = Actions(player)
 
     directions = ('n', 's', 'e', 'w')
 
     while True:
-
+        # check if player has reached an end state
         if actions.result == 'good end':
             print(good_end)
             break
@@ -251,7 +250,7 @@ def main():
 
         else:
             print(
-                "It's pitch black. You hear strange whispers coming from the darkness...")
+                "\nIt's pitch black. You hear strange whispers coming from the darkness...")
 
         # wait for user input
         user_input = input(">>> ")
@@ -260,7 +259,7 @@ def main():
         if input_length > 1:
             user_input = user_input.split(' ')
 
-        print()
+        print("\n---------------------------------------------------------------------------\n\n")
 
         # if the form of the input is 'verb'
         if input_length == 1:
