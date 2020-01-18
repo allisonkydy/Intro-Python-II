@@ -1,5 +1,8 @@
 # Write a class to hold player information, e.g. what room they are in
 # currently.
+import textwrap
+
+wrapper = textwrap.TextWrapper(initial_indent="    ", subsequent_indent="    ")
 
 from item import LightSource, LockedItem
 
@@ -23,20 +26,20 @@ class Player:
                     self.current_room = next_room
                     
                     if direction == 'n':
-                        print("You move north")
+                        print(wrapper.fill("You move north"))
                     elif direction == 's':
-                        print("You move south")
+                        print(wrapper.fill("You move south"))
                     elif direction == 'e':
-                        print("You move east")
+                        print(wrapper.fill("You move east"))
                     elif direction == 'w':
-                        print("You move west")
+                        print(wrapper.fill("You move west"))
 
                 else:
-                    print("It's too dark to see that way")
+                    print(wrapper.fill("It's too dark to see that way"))
             else:
-                print("Your path is blocked")
+                print(wrapper.fill("Your path is blocked"))
         else:
-            print("You cannot move in that direction")
+            print(wrapper.fill("You cannot move in that direction"))
 
     def remove_item(self, item):
         self.inventory.remove(item)
@@ -59,13 +62,13 @@ class Player:
                     if isinstance(item, LightSource) and item.is_lit:
                         self.is_lit = True
                 else:
-                    print("You can't get that right now")
+                    print(wrapper.fill("You can't get that right now"))
 
             else:
-                print("There is no such thing here")
+                print(wrapper.fill("There is no such thing here"))
 
         else:
-            print("Good luck finding that in the dark")
+            print(wrapper.fill("Good luck finding that in the dark"))
 
     def drop_item(self, item):
         # check if item is in inventory
@@ -78,11 +81,11 @@ class Player:
             if isinstance(item, LightSource) and item.is_lit:
                 self.is_lit = False
         else:
-            print("You don't have that in your inventory")
+            print(wrapper.fill("You don't have that in your inventory"))
 
     def print_inventory(self):
         if len(self.inventory) == 0:
-            print("You're not carrying anything")
+            print(wrapper.fill("You're not carrying anything"))
         else:
             print(
                 f"You're carrying: {', '.join([item.name for item in self.inventory])}")
@@ -95,9 +98,9 @@ class Player:
     def look_item(self, item):
         # if the item is in the room or the player's inventory, print the description
         if item in self.current_room.items or item in self.inventory:
-            print(item.description)
+            print(wrapper.fill(item.description))
         else:
-            print("You don't see that")
+            print(wrapper.fill("You don't see that"))
 
     def use_item_on_item(self, item_used, item_target, actions):
         # check if player has the item used
@@ -109,10 +112,10 @@ class Player:
                     getattr(actions, f"{item_used.name}_{item_target.name}")(item_used, item_target)
 
                 else:
-                    print("That's not a good idea")
+                    print(wrapper.fill("That's not a good idea"))
             elif item_target.is_locked and item_target.key is item_used:
                 getattr(actions, f"{item_used.name}_{item_target.name}")(item_used, item_target)
             else:
                 item_target.print_locked_message()
         else:
-            print("You don't have that")
+            print(wrapper.fill("You don't have that"))

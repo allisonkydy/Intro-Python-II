@@ -1,5 +1,9 @@
 # Implement a class to hold room information. This should have name and
 # description attributes.
+import textwrap
+
+wrapper = textwrap.TextWrapper(initial_indent="    ", subsequent_indent="    ")
+
 
 class Room:
     def __init__(self, name, description, is_lit):
@@ -32,8 +36,8 @@ class Room:
 
     def print_items(self):
         if len(self.items) == 0:
-            print("Nothing to see here.")
+            print(wrapper.fill("Nothing to see here."))
         else:
             # print(f"You see: {', '.join([item.name for item in self.items])}")
             for item in self.items:
-                print(item.location_desc)
+                print(wrapper.fill(item.location_desc))

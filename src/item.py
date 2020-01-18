@@ -1,3 +1,6 @@
+import textwrap
+
+wrapper = textwrap.TextWrapper(initial_indent="    ", subsequent_indent="    ")
 
 class Item:
     def __init__(self, name, description, is_gettable, location_desc):
@@ -7,11 +10,11 @@ class Item:
         self.location_desc = location_desc
 
     def on_take(self):
-        print(f"You pick up the {self.name}")
+        print(wrapper.fill(f"You pick up the {self.name}"))
 
     def on_drop(self):
         self.location_desc = f"The {self.name} lies on the ground."
-        print(f"You drop the {self.name}")
+        print(wrapper.fill(f"You drop the {self.name}"))
 
 
 class LightSource(Item):
@@ -20,8 +23,8 @@ class LightSource(Item):
         self.is_lit = False
 
     def on_drop(self):
-        print("It's unwise to drop your source of light")
-        print(f"You drop the {self.name}")
+        print(wrapper.fill("It's unwise to drop your source of light"))
+        print(wrapper.fill(f"You drop the {self.name}"))
 
     def light_on(self):
         self.is_lit = True
@@ -35,5 +38,5 @@ class LockedItem(Item):
         self.locked_message = locked_message
 
     def print_locked_message(self):
-        print(self.locked_message)
+        print(wrapper.fill(self.locked_message))
 
